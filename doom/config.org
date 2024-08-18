@@ -1,0 +1,74 @@
+#+title: Config
+#+author: Simon Reuter
+
+* General settings
+#+BEGIN_SRC emacs-lisp
+(setq   display-line-numbers-type       'relative
+        org-directory                   "~/org/"
+        orderless-component-separator   #'orderless-escapable-split-on-space
+        orderless-matching-styles       '(orderless-flex)
+)
+
+#+END_SRC
+
+* Start up
+#+BEGIN_SRC emacs-lisp
+(add-hook 'window-setup-hook #'toggle-frame-maximized)
+(add-hook 'window-setup-hook #'treemacs)
+#+END_SRC
+
+* Custom functions
+** Evil extensions
+#+begin_src emacs-lisp
+(evil-define-operator sr/evil-delete-to-void-register (beg end type register)
+  "Delete text from BEG to END with TYPE, placing it in the void register."
+  :move-point nil
+  :type exclusive
+  (evil-delete beg end type ?_))
+#+end_src
+
+** Org helpers
+#+begin_src emacs-lisp
+(defun sr/org-insert-code-block ()
+  "Insert a code block with the specified LANG."
+  (interactive)
+  (let ((lang (completing-read "Language:" (mapcar #'cdr org-src-lang-modes))))
+    (insert (format "#+begin_src %s\n\n#+end_src\n" lang))
+    (previous-line 2)))  ;; Move cursor between the source block lines
+#+end_src
+
+* Keybinds
+** General
+#+begin_src emacs-lisp
+(map! :map 'override "C-M-s-<f12>" #'execute-extended-command)
+#+end_src
+
+** Leader
+#+begin_src emacs-lisp
+(map! :leader
+      :desc "Consult buffer" "," #'consult-buffer)
+#+end_src
+
+** Evil
+#+begin_src emacs-lisp
+(map! :n "r" #'sr/evil-delete-to-void-register)
+#+end_src
+
+* Packages
+#+begin_src emacs-lisp
+(use-package! dired-subtree
+  :after dired)
+
+(use-package! orderless
+  :after vertico
+  :custom
+  (completion-styles '(orderless)))
+#+end_src
+* Window management
+#+begin_src emacs-lisp
+(add-to-list 'display-buffer-alist
+             '("\\*Async Shell Command\\*"
+               (display-buffer-reuse-window
+                display-buffer-pop-up-window)
+               (reusable-frames . t)))
+#+end_src
