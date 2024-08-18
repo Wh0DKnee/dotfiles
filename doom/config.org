@@ -1,3 +1,8 @@
+* Emacs Configuration
+:PROPERTIES:
+:TANGLE: ~/.config/doom/config.el
+:END:
+
 #+title: Config
 #+author: Simon Reuter
 
