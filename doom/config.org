@@ -1,5 +1,7 @@
-#+title: Config
+#+title: Configuration
 #+author: Simon Reuter
+
+Emacs is cool
 
 * General settings
 #+begin_src emacs-lisp
@@ -52,7 +54,6 @@
    to async-shell-command."
   (async-shell-command (string-join args " ")))
 #+end_src
-
 
 * Keybinds
 If you see some strange keybinds here it probably means I have some combo on my QMK keyboard to produce it.
