@@ -6,9 +6,7 @@
 (setq   display-line-numbers-type       'relative
         org-directory                   "~/org/"
         orderless-component-separator   #'orderless-escapable-split-on-space
-        orderless-matching-styles       '(orderless-flex)
-)
-
+        orderless-matching-styles       '(orderless-flex))
 #+END_SRC
 
 * Start up
@@ -20,11 +18,22 @@
 * Custom functions
 ** Evil extensions
 #+begin_src emacs-lisp
-(evil-define-operator sr/evil-delete-to-void-register (beg end type register)
+(evil-define-operator sr/evil-delete-to-void-register (beg end type _register yank-handler)
   "Delete text from BEG to END with TYPE, placing it in the void register."
-  :move-point nil
-  :type exclusive
-  (evil-delete beg end type ?_))
+  (interactive "<R><x><y>")
+  (evil-delete beg end type ?_ yank-handler))
+
+(defun sr/evil-delete-to-end-of-line-to-void-register ()
+  "Delete from the point to the end of the line into the void register."
+  (interactive)
+  (evil-delete (point) (line-end-position) 'inclusive ?_))
+
+(defun sr/delete-char-to-void-register ()
+  "Delete the character under the cursor and place it in the void register."
+  (interactive)
+  (let ((beg (point))
+        (end (1+ (point)))) ;; end is one character after the point
+    (evil-delete beg end 'exclusive ?_)))
 #+end_src
 
 ** Org helpers
@@ -37,11 +46,19 @@
     (previous-line 2)))  ;; Move cursor between the source block lines
 #+end_src
 
+** Eshell extensions
+#+begin_src emacs-lisp
+(defun eshell/async (&rest args)
+  "Concatenate all ARGS into a single string and pass that string
+   to async-shell-command."
+  (async-shell-command (string-join args " ")))
+#+end_src
+
+
 * Keybinds
 If you see some strange keybinds here it probably means I have some combo on my QMK keyboard to produce it.
 ** General
 #+begin_src emacs-lisp
-;; I have this bound to a custom key combo on my QMK keyboard
 (map! :map 'override "C-M-s-<f12>" #'execute-extended-command)
 #+end_src
 
@@ -54,6 +71,8 @@ If you see some strange keybinds here it probably means I have some combo on my 
 ** Evil
 #+begin_src emacs-lisp
 (map! :n "r" #'sr/evil-delete-to-void-register)
+(map! :n "R" #'sr/evil-delete-to-end-of-line-to-void-register)
+(map! :n "x" #'sr/delete-char-to-void-register)
 #+end_src
 
 * Packages
@@ -65,7 +84,13 @@ If you see some strange keybinds here it probably means I have some combo on my 
   :after vertico
   :custom
   (completion-styles '(orderless)))
+
+(after! evil
+  (defalias #'forward-evil-word #'forward-evil-symbol)
+  ;; make evil-search-word look for symbol rather than word boundaries
+  (setq-default evil-symbol-word-search t))
 #+end_src
+
 * Window management
 #+begin_src emacs-lisp
 (add-to-list 'display-buffer-alist
