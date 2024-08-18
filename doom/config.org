@@ -2,18 +2,17 @@
 #+author: Simon Reuter
 
 * General settings
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq   display-line-numbers-type       'relative
         org-directory                   "~/org/"
         orderless-component-separator   #'orderless-escapable-split-on-space
         orderless-matching-styles       '(orderless-flex))
-#+END_SRC
+#+end_src
 
 * Start up
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (add-hook 'window-setup-hook #'toggle-frame-maximized)
-(add-hook 'window-setup-hook #'treemacs)
-#+END_SRC
+#+end_src
 
 * Custom functions
 ** Evil extensions

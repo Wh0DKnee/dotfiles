@@ -4,7 +4,6 @@
         orderless-matching-styles       '(orderless-flex))
 
 (add-hook 'window-setup-hook #'toggle-frame-maximized)
-(add-hook 'window-setup-hook #'treemacs)
 
 (evil-define-operator sr/evil-delete-to-void-register (beg end type _register yank-handler)
   "Delete text from BEG to END with TYPE, placing it in the void register."
