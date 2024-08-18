@@ -38,8 +38,10 @@
 #+end_src
 
 * Keybinds
+If you see some strange keybinds here it probably means I have some combo on my QMK keyboard to produce it.
 ** General
 #+begin_src emacs-lisp
+;; I have this bound to a custom key combo on my QMK keyboard
 (map! :map 'override "C-M-s-<f12>" #'execute-extended-command)
 #+end_src
 

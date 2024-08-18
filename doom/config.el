@@ -20,6 +20,7 @@
     (insert (format "#+begin_src %s\n\n#+end_src\n" lang))
     (previous-line 2)))  ;; Move cursor between the source block lines
 
+;; I have this bound to a custom key combo on my QMK keyboard
 (map! :map 'override "C-M-s-<f12>" #'execute-extended-command)
 
 (map! :leader
